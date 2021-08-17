@@ -1,4 +1,5 @@
 import 'package:aplikasi_rs/lupa_password.dart';
+import 'package:aplikasi_rs/services/services.dart';
 import 'package:flutter/material.dart';
 import 'lupa_password.dart';
 import 'registrasi_pasien.dart';
@@ -9,8 +10,17 @@ class LoginPasien extends StatefulWidget {
   _LoginPasienState createState() => _LoginPasienState();
 }
 
+enum LoginStatus { notSignIn, signIn }
+
 class _LoginPasienState extends State<LoginPasien> {
   bool isHiddenPassword = true;
+  bool _secureText = true;
+
+  showHide() {
+    setState(() {
+      _secureText = !_secureText;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,80 +60,87 @@ class _LoginPasienState extends State<LoginPasien> {
               ),
             ),
             Container(
-                padding: EdgeInsets.all(25.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextField(
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.card_membership),
-                        hintText: 'Nomor KTP',
-                      ),
+              padding: EdgeInsets.all(25.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextField(
+                    controller: noKtp1,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.card_membership),
+                      hintText: 'Nomor KTP',
                     ),
-                    TextField(
-                      obscureText: isHiddenPassword,
-                      decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.vpn_key),
-                          hintText: 'Password',
-                          suffixIcon: InkWell(
-                            onTap: _togglePasswordView,
-                            child: Icon(Icons.visibility_off),
-                          )),
+                  ),
+                  TextField(
+                    controller: pass1,
+                    obscureText: isHiddenPassword,
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.vpn_key),
+                        hintText: 'Password',
+                        suffixIcon: InkWell(
+                          onTap: _togglePasswordView,
+                          child: Icon(Icons.visibility_off),
+                        )),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 25),
+                  ),
+                  Container(
+                    height: 50,
+                    width: 300,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(5.0))),
+                      onPressed: () {
+                        LoginPasienState().login();
+                        setState(() {
+                          if (loginpasien != 0) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DashboardPasien()));
+                          }
+                        });
+                      },
+                      child: Text('Masuk'),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 25),
+                  ),
+                  SizedBox(height: 15.0),
+                  Container(
+                    child: Container(
+                        child: Center(
+                            child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ForgotPassword()));
+                      },
+                      child: Text('Lupa Password'),
+                    ))),
+                  ),
+                  SizedBox(height: 15.0),
+                  Container(
+                    height: 50,
+                    width: 300,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                          primary: const Color(0xFF000000),
+                          backgroundColor: const Color(0xFFE7EEFE)),
+                      // color:
+                      onPressed: () {
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => RegistrasiPasien()));
+                      },
+                      child: Text('Buat Akun'),
                     ),
-                    Container(
-                      height: 50,
-                      width: 300,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(5.0))),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DashboardPasien()));
-                        },
-                        child: Text('Masuk'),
-                      ),
-                    ),
-                    SizedBox(height: 15.0),
-                    Container(
-                      child: Container(
-                          child: Center(
-                              child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ForgotPassword()));
-                        },
-                        child: Text('Lupa Password'),
-                      ))),
-                    ),
-                    SizedBox(height: 15.0),
-                    Container(
-                      height: 50,
-                      width: 300,
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                            primary: const Color(0xFF000000),
-                            backgroundColor: const Color(0xFFE7EEFE)
-                          ),
-                        // color: 
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RegistrasiPasien()));
-                        },
-                        child: Text('Buat Akun'),
-                      ),
-                    )
-                  ],
-                ))
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),
